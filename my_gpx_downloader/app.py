@@ -29,7 +29,10 @@ def tf_session():
     # 1) Obtener token CSRF
     r1 = s.get(LOGIN_URL, headers=HEADERS)
     soup = BeautifulSoup(r1.text, "html.parser")
-    token = soup.find("input", {"name": "csrfmiddlewaretoken"})["value"]
+    token_input = soup.find("input", {"name": "csrfmiddlewaretoken"})
+    if not token_input:
+        raise RuntimeError("No se pudo encontrar el token CSRF en la página de login. Trailforks pudo haber cambiado su web.")
+    token = token_input["value"]
 
     # 2) Login
     payload = {
