@@ -6,6 +6,7 @@ import requests
 from bs4 import BeautifulSoup
 from io import BytesIO
 from dotenv import load_dotenv
+import html
 
 load_dotenv()  # carga variables de .env
 
@@ -31,7 +32,12 @@ def tf_session():
     soup = BeautifulSoup(r1.text, "html.parser")
     token_input = soup.find("input", {"name": "csrfmiddlewaretoken"})
     if not token_input:
-        raise RuntimeError("No se pudo encontrar el token CSRF en la página de login. Trailforks pudo haber cambiado su web.")
+        # DEBUG: Mostremos qué nos devuelve la página para entender el bloqueo.
+        page_content_preview = html.escape(r1.text[:1500])
+        raise RuntimeError(
+            "No se pudo encontrar el token CSRF. Trailforks pudo haber cambiado su web o está bloqueando la solicitud. "
+            f"Contenido recibido: <pre style='background:#eee;padding:10px;border-radius:5px;white-space:pre-wrap;word-wrap:break-word;'>{page_content_preview}</pre>"
+        )
     token = token_input["value"]
 
     # 2) Login
