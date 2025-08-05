@@ -16,7 +16,7 @@ if not EMAIL or not PASSWORD:
 
 LOGIN_URL = "https://www.trailforks.com/login"
 HEADERS = {
-    "User-Agent": "Mozilla/5.0 (compatible; GPX-Downloader/1.0)"
+    "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/108.0.0.0 Safari/537.36"
 }
 
 app = Flask(__name__)
