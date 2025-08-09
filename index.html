@@ -9,7 +9,7 @@
   .card{width:96%;max-width:640px;background:#fff;padding:18px;border-radius:10px;box-shadow:0 8px 28px rgba(7,32,52,0.06)}
   input{width:100%;padding:10px;border-radius:8px;border:1px solid #e6eef9;font-size:15px}
   .row{display:flex;gap:8px;margin-top:12px}
-  button{flex:1;padding:10px;border-radius:8px;border:0;background:#0b5fff;color:#fff;cursor:pointer}
+  button,a.button{flex:1;padding:10px;border-radius:8px;border:0;background:#0b5fff;color:#fff;cursor:pointer;text-decoration:none;text-align:center;font-size:14px;font-weight:500;line-height:1.2}
   button.secondary{background:#eef5ff;color:#0b5fff;border:1px solid #d7e6ff}
   p{color:#566079;font-size:14px}
 </style>
@@ -21,7 +21,7 @@
     <input id="url" placeholder="https://www.trailforks.com/trails/mortal-kombat-540562/"/>
     <div class="row">
       <button id="view" class="secondary">Ver mapa</button>
-      <button id="dl">Descargar</button>
+      <a id="dl" class="button" target="_blank">Descargar</a>
     </div>
     <p style="margin-top:10px">Si tu navegador bloquea popups, abre la URL manualmente. Asegúrate de estar logueado en Trailforks.</p>
   </div>
@@ -30,20 +30,28 @@
   function normUrl(u){
     try { u = (u||'').trim(); if(!u) return ''; if(u.slice(-1) !== '/') u += '/'; return u; } catch(e){ return ''; }
   }
+  function updateDlLink(){
+    var u = normUrl(document.getElementById('url').value);
+    var dl = document.getElementById('dl');
+    if(!u){
+      dl.style.opacity = '0.5';
+      dl.style.pointerEvents = 'none';
+      dl.href = '#';
+      return;
+    }
+    dl.style.opacity = '1';
+    dl.style.pointerEvents = 'auto';
+    var trail = u.indexOf('/map/') !== -1 ? u.replace('/map/','') : u;
+    dl.href = trail + (trail.indexOf('?') === -1 ? '?tf_gpx_auto=1' : '&tf_gpx_auto=1');
+  }
   document.getElementById('view').addEventListener('click', function(){
     var u = normUrl(document.getElementById('url').value);
     if(!u){ alert('Pega la URL del trail.'); return; }
     var map = u.indexOf('/map/') === -1 ? u + 'map/' : u;
     window.open(map, '_blank');
   });
-  document.getElementById('dl').addEventListener('click', function(){
-    var u = normUrl(document.getElementById('url').value);
-    if(!u){ alert('Pega la URL del trail.'); return; }
-    var trail = u.indexOf('/map/') !== -1 ? u.replace('/map/','') : u;
-    var target = trail + (trail.indexOf('?') === -1 ? '?tf_gpx_auto=1' : '&tf_gpx_auto=1');
-    // open in new tab so user doesn't lose this UI
-    window.open(target, '_blank');
-  });
+  document.getElementById('url').addEventListener('input', updateDlLink);
+  updateDlLink();
 </script>
 </body>
 </html>
