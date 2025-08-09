@@ -1,0 +1,49 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1"/>
+<title>Trailforks — Descargar GPX</title>
+<style>
+  body{font-family:system-ui,-apple-system,Segoe UI,Roboto,Arial;margin:0;background:#f6f9ff;color:#072034;display:flex;align-items:center;justify-content:center;height:100vh}
+  .card{width:96%;max-width:640px;background:#fff;padding:18px;border-radius:10px;box-shadow:0 8px 28px rgba(7,32,52,0.06)}
+  input{width:100%;padding:10px;border-radius:8px;border:1px solid #e6eef9;font-size:15px}
+  .row{display:flex;gap:8px;margin-top:12px}
+  button{flex:1;padding:10px;border-radius:8px;border:0;background:#0b5fff;color:#fff;cursor:pointer}
+  button.secondary{background:#eef5ff;color:#0b5fff;border:1px solid #d7e6ff}
+  p{color:#566079;font-size:14px}
+</style>
+</head>
+<body>
+  <div class="card">
+    <h2>Trailforks — Descargar GPX</h2>
+    <p>Pega la URL del trail y pulsa <strong>Descargar</strong>. (Antes instala el userscript en Tampermonkey/Violentmonkey).</p>
+    <input id="url" placeholder="https://www.trailforks.com/trails/mortal-kombat-540562/"/>
+    <div class="row">
+      <button id="view" class="secondary">Ver mapa</button>
+      <button id="dl">Descargar</button>
+    </div>
+    <p style="margin-top:10px">Si tu navegador bloquea popups, abre la URL manualmente. Asegúrate de estar logueado en Trailforks.</p>
+  </div>
+
+<script>
+  function normUrl(u){
+    try { u = (u||'').trim(); if(!u) return ''; if(u.slice(-1) !== '/') u += '/'; return u; } catch(e){ return ''; }
+  }
+  document.getElementById('view').addEventListener('click', function(){
+    var u = normUrl(document.getElementById('url').value);
+    if(!u){ alert('Pega la URL del trail.'); return; }
+    var map = u.indexOf('/map/') === -1 ? u + 'map/' : u;
+    window.open(map, '_blank');
+  });
+  document.getElementById('dl').addEventListener('click', function(){
+    var u = normUrl(document.getElementById('url').value);
+    if(!u){ alert('Pega la URL del trail.'); return; }
+    var trail = u.indexOf('/map/') !== -1 ? u.replace('/map/','') : u;
+    var target = trail + (trail.indexOf('?') === -1 ? '?tf_gpx_auto=1' : '&tf_gpx_auto=1');
+    // open in new tab so user doesn't lose this UI
+    window.open(target, '_blank');
+  });
+</script>
+</body>
+</html>
