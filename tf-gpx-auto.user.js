@@ -49,7 +49,7 @@
   }
 
   function extractEncodedPathFromHtml(html) {
-    var m = html.match(/encodedpath:\s?'(.*?)'/);
+    var m = html.match(/encodedpath:\s?['"](.*?)['"]/);
     if (!m || !m[1]) return null;
     try { return m[1].replace(/\\\\/g, '\\'); } catch (e) { return m[1]; }
   }
@@ -58,14 +58,14 @@
     var trk = '';
     for (var i = 0; i < waypoints.length; i++) {
       var c = waypoints[i];
-      trk += '\n\t\t\t<trkpt lat=\"' + c[0] + '\" lon=\"' + c[1] + '\"/>';
+      trk += '\n      <trkpt lat=\"' + c[0] + '\" lon=\"' + c[1] + '\"/>';
     }
-    var head = '<?xml version=\"1.0\" encoding=\"UTF-8\"?>\\n' +
+    var head = '<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n' +
                '<gpx xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\" ' +
                'xsi:schemaLocation=\"http://www.topografix.com/GPX/1/1 http://www.topografix.com/GPX/1/1/gpx.xsd\" ' +
                'version=\"1.1\" xmlns=\"http://www.topografix.com/GPX/1/1\" creator=\"tf-gpx-auto\">';
-    var meta = '\\n\\t<metadata>\\n\\t\\t<link href=\"' + pageUrl + '\">\\n\\t\\t\\t<text>' + title + '</text>\\n\\t\\t</link>\\n\\t</metadata>\\n\\t<trk>\\n\\t\\t<name>' + shortTitle + '</name>\\n\\t\\t<trkseg>';
-    var foot = '\\n\\t\\t</trkseg>\\n\\t</trk>\\n</gpx>';
+    var meta = '\n  <metadata>\n    <link href=\"' + pageUrl + '\">\n      <text>' + title + '</text>\n    </link>\n  </metadata>\n  <trk>\n    <name>' + shortTitle + '</name>\n    <trkseg>';
+    var foot = '\n    </trkseg>\n  </trk>\n</gpx>';
     return head + meta + trk + foot;
   }
 
